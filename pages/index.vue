@@ -10,12 +10,20 @@ function getGreeting() {
 </script>
 
 <template>
-  <div>
-    <div v-if="user" class="relative top-14 left-14">
-      <div class="flex">
-        <UAvatar size="3" class="w-14 h-14 mr-3" :src="user.picture" :alt="user.name" />
-        <h1 class="text-3xl mt-1">{{ getGreeting() }}, {{ user.name }}</h1>
+  <div class="relative top-14 m-10">
+    <div>
+      <div v-if="user" class="mb-10">
+        <div class="flex">
+          <UAvatar
+            size="xl"
+            class="w-14 h-14 mr-3"
+            :src="user.picture"
+            :alt="user.name"
+          />
+          <h1 class="text-3xl mt-1">{{ getGreeting() }}, {{ user.name }}</h1>
+        </div>
       </div>
     </div>
+    <TilesDaily />
   </div>
 </template>

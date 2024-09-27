@@ -5,13 +5,18 @@ interface PartialSkylander {
     category: string;
     game: string;
     price?: string;
-    _id?: string;
+    _id?: string | undefined;
 }
 
 interface Skylander extends PartialSkylander {
     element: string;
     releasedWith: string;
     series: string;
+}
+
+interface DailyMetadata {
+    date: Date;
+    skylander: PartialSkylander;
 }
 
 type Category = 
