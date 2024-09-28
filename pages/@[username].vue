@@ -1,3 +1,7 @@
+<script setup>
+const { user } = useUser();
+</script>
+
 <template>
-    <h1>jello</h1>
+    <h1> hi {{ user }}</h1>
 </template>
