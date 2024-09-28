@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import DailyMetadata from "~/schemas/dailyMetadata";
 import PartialSkylander from "~/schemas/partialSkylander";
+import Update from "~/schemas/updates";
 
 mongoose.connect("mongodb://localhost/skylanders");
 
@@ -77,4 +78,30 @@ export async function getDailyMetadata(date: Date): Promise<DailyMetadata> {
   }
 
   return metadata;
+}
+
+// this function SUCKS!! 
+export async function getPageOfPartials(page: number, filter?: Object): Promise<PartialSkylander[]> {
+  if (filter) {
+    // @ts-ignore
+    if (filter["game"]) {
+          // @ts-ignore
+      const skylanders: PartialSkylander[] = await PartialSkylander.find({ game: filter["game"] }).skip(page * 25)
+      return skylanders;
+      // @ts-ignore
+    } else if (filter["category"]) {
+          // @ts-ignore
+      const skylanders: PartialSkylander[] = await PartialSkylander.find({ category: filter["category"] })
+      return skylanders;
+    }
+  }
+
+  // @ts-ignore
+  const skylanders: PartialSkylander[] = await PartialSkylander.find().skip(page * 25).limit(25);
+  return skylanders;
+}
+
+export async function getUpdates(): Promise<Update[]> {
+  const updates: Update[] = await Update.find();
+  return updates;
 }

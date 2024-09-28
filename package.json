@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@clerk/backend": "^1.13.5",
+    "@iconify-json/material-symbols": "^1.2.1",
     "@nuxt/icon": "^1.5.2",
     "@nuxt/image": "^1.8.0",
     "@nuxt/ui": "^2.18.6",

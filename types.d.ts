@@ -19,6 +19,15 @@ interface DailyMetadata {
     skylander: PartialSkylander;
 }
 
+enum EnumGame {
+    "spyros-adventure-figures",
+    "giants-figures",
+    "swap-force-figures",
+    "trap-team-figures",
+    "superchargers-figures",
+    "imaginators-figures",
+}
+
 type Category = 
     | "All Skylanders Spyro's Adventure Characters"
     | "Spyro's Adventure Magic Items and Level Pieces"
@@ -67,3 +76,8 @@ type Category =
     | "Magic Items";
 
 type Game = "spyros-adventure-figures" | "giants-figures" | "swap-force-figures" | "trap-team-figures" | "superchargers-figures" | "imaginators-figures";
+
+interface Update {
+    date: Date;
+    changes: string[];
+}
