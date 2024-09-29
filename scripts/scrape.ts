@@ -75,6 +75,59 @@ function sanitizeFilename(name) {
   return name.replace(illegalCharacters, "");
 }
 
+export async function getSkylanderData(
+  partial: PartialSkylander
+): Promise<Skylander> {
+  const response = await fetch(partial.link);
+  const html = await response.text();
+  const $ = cheerio.load(html);
+
+  const skylander: Skylander = {
+    name: partial.name,
+    link: partial.link,
+    image: partial.image,
+    category: partial.category,
+    game: partial.game,
+    element: "",
+    releasedWith: "",
+    series: "",
+    price: "",
+  };
+
+  const basicInfoDiv = $(".tab-pane.fade.fusion-clearfix.in.active")
+    .find("table")
+    .find("tbody");
+  const basicInfo = $(basicInfoDiv).find("tr").find("td");
+  skylander.element = $(basicInfo[0]).text();
+  skylander.releasedWith = $(basicInfo[1]).text();
+  skylander.series = $(basicInfo[2]).text();
+
+  const priceUrl = `https://skylanderscharacterlist.com/shop/${
+    skylander.link.split("/")[3]
+  }/`;
+  const priceResponse = await fetch(priceUrl);
+  const priceHtml = await priceResponse.text();
+  const price$ = cheerio.load(priceHtml);
+
+  const price = price$(".price-item.price-item--regular");
+  if (price.length > 0) {
+    let p = price.text().replaceAll("\n", "").trim();
+    // check if p has 2 dots
+    const dots = p.match(/\./g);
+
+    // if there are 2 dots
+    if (dots && dots.length > 1) {
+      const split = p.split(' ');
+      p = split[0];
+    }
+
+    skylander.price = p.trim();
+  } else {
+    skylander.price = "N/A";
+  }
+  return skylander;
+}
+
 async function main() {
   console.log("scraping partial figures...");
   await scrapeFigures();
@@ -112,6 +165,14 @@ async function main() {
     if (!figure.image || !figure.name || !figure.link || !figure.category) {
       continue;
     }
+    console.log(`getting more data for ${figure.name}`);
+    const moreData = await getSkylanderData(figure);
+    console.log(`got more data for ${figure.name}`);
+
+    figure.element = moreData.element.toLowerCase();
+    figure.releasedWith = moreData.releasedWith;
+    figure.series = moreData.series.split(" ")[1];
+    figure.price = moreData.price?.split(" ")[0]
 
     await savePartialSkylander(figure);
     console.log(`saved figure to database: ${figure.name}`);

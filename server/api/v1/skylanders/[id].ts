@@ -18,6 +18,5 @@ export default defineCachedEventHandler(async (event) => {
         });
     }
 
-    const fullSkylander = await getSkylanderData(skylander);
-    return fullSkylander;
+    return skylander;
 }, { maxAge: 60 * 60 * 24 });

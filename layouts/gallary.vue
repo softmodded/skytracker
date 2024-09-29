@@ -86,6 +86,13 @@ const game = ref();
 const category = ref();
 const element = ref();
 
+const searching = ref(false);
+const term = useState("searchTerm")
+
+function upperCaseFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 onMounted(() => {
   if (route.params.game) {
     game.value = route.params.game;
@@ -103,7 +110,7 @@ watch(route, () => {
   } else if (route.params.category) {
     category.value = turnMeanCategoryFriendly(route.params.category);
   } else if (route.params.element) {
-    element.value = route.params.element;
+    element.value = upperCaseFirstLetter(route.params.element);
   }
 });
 
@@ -115,6 +122,9 @@ watch(game, () => {
   if (element.value) {
     element.value = null;
   }
+
+  term.value = "";
+
   if (game.value) {
     push(`/figures/game/${game.value}`);
   }
@@ -128,10 +138,41 @@ watch(category, () => {
     element.value = null;
   }
 
+  term.value = "";
+
   if (category.value) {
-    push(`/figures/category/${turnFriendlyCategoryMean(category.value).toLowerCase()}`);
+    push(
+      `/figures/category/${turnFriendlyCategoryMean(
+        category.value
+      ).toLowerCase()}`
+    );
   }
 });
+
+watch(element, () => {
+  if (game.value) {
+    game.value = null;
+  }
+  if (category.value) {
+    category.value = null;
+  }
+
+  term.value = "";
+
+
+  if (element.value) {
+    push(`/figures/element/${element.value.toLowerCase()}`);
+  }
+});
+
+function clearFilters() {
+  game.value = null;
+  category.value = null;
+  element.value = null;
+  term.value = "";
+  searching.value = false;
+  push("/figures/all");
+}
 </script>
 
 <template>
@@ -168,26 +209,42 @@ watch(category, () => {
           >skylanderscharacterlist</span
         >
       </p>
-      <div class="flex mt-2 align-middle justify-center">
-        <USelectMenu
-          v-model="game"
-          :options="games"
-          value-attribute="id"
-          class="w-44"
-          option-attribute="name"
-          placeholder="filter by game"
+      <div v-auto-animate class="flex mt-2 align-middle justify-center">
+        <UButton
+          @click="searching = !searching"
+          class="mx-2"
+          color="white"
+          icon="material-symbols:search-rounded"
         />
-        <USelectMenu
-          v-model="category"
-          :options="categories"
-          class="mx-5 w-72"
-          placeholder="filter by type"
-        />
-        <USelectMenu
-          v-model="element"
-          :options="elements"
-          placeholder="filter by element"
-        />
+        <UInput v-auto-animate color="white" v-if="searching" class="w-72" variant="outline" v-model="term" placeholder="Search..." />
+        <div v-auto-animate class="flex transition-all" v-if="!searching">
+          <USelectMenu
+            v-model="game"
+            :options="games"
+            value-attribute="id"
+            class="w-44"
+            option-attribute="name"
+            placeholder="filter by game"
+          />
+          <USelectMenu
+            v-model="category"
+            :options="categories"
+            class="mx-5 w-72"
+            placeholder="filter by type"
+          />
+          <USelectMenu
+            v-model="element"
+            :options="elements"
+            class="w-48"
+            placeholder="filter by element"
+          />
+        </div>
+        <UButton
+          @click="clearFilters()"
+          class="mx-2"
+          color="red"
+          label="clear filters"
+        ></UButton>
       </div>
       <slot class="-z-50" />
     </div>

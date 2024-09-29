@@ -12,26 +12,37 @@ const game = route.params.game;
 const figures = ref([]);
 const loading = ref(true);
 const currentPage = ref(1);
+const previousData = ref([]);
+const searchedFigures = ref([]);
+const term = useState("searchTerm");
 
 async function fetchNextPage() {
   loading.value = true;
-  const response = await fetch(`/api/v1/partials/page/${currentPage.value}?game=${game}`);
-  const data = await response.json();
-  figures.value = [...figures.value, ...data];
   currentPage.value += 1;
+  const response = await fetch(`/api/v1/partials/page/${currentPage.value - 1}?game=${game}`);
+  const data = await response.json();
+  if (previousData.value === data) {
+    loading.value = false;
+    return;
+  }
+
+  previousData.value = data;
+  figures.value = [...figures.value, ...data];
+  searchedFigures.value = figures.value;
   loading.value = false;
 }
 
 onMounted(fetchNextPage);
-
-// when the user scrolls somewhere near the bottom of the page
-window.onscroll = function () {
-  if (
-    window.innerHeight + window.scrollY >= document.body.offsetHeight - 100
-  ) {
-    fetchNextPage();
+watch(term, () => {
+  if (term.value === "") {
+    searchedFigures.value = figures.value;
+    return;
   }
-};
+
+  searchedFigures.value = figures.value.filter((figure) => {
+    return figure.name.toLowerCase().includes(term.value.toLowerCase());
+  });
+});
 </script>
 
 <template>
@@ -41,15 +52,15 @@ window.onscroll = function () {
         class="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-4 mx-4 mt-5"
       >
         <div
-          v-for="figure in figures"
+          v-for="figure in searchedFigures"
           :key="figure.id"
           class="border-2 rounded-md cursor-pointer transition-all hover:scale-105"
-          @click="push('/figures/' + figure.id)"
+          @click="push('/figures/' + figure._id)"
         >
-          <img
+          <NuxtImg
             :src="figure.image"
             alt="figure"
-            class="mx-auto px-3 pt-2 pb-3"
+            class="mx-auto w-64 px-3 pt-2 pb-3 my-auto"
           />
           <h1 class="text-center mx-auto font-semibold text-xl">
             {{ figure.name }}

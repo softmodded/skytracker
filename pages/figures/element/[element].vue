@@ -7,18 +7,19 @@ const router = useRouter();
 const push = (path) => router.push(path);
 
 const route = useRoute();
-const category = route.params.category;
+const element = route.params.element;
 
 const figures = ref([]);
-const loading = ref(true);
-const term = useState("searchTerm");
 const searchedFigures = ref([]);
+const loading = ref(true);
 const currentPage = ref(1);
+
+const term = useState("searchTerm");
 
 async function fetchNextPage() {
   loading.value = true;
   currentPage.value += 1;
-  const response = await fetch(`/api/v1/partials/page/${currentPage.value - 1}?category=${category}`);
+  const response = await fetch(`/api/v1/partials/page/${currentPage.value - 1}?element=${element}`);
   const data = await response.json();
   figures.value = [...figures.value, ...data];
   searchedFigures.value = figures.value
@@ -67,9 +68,6 @@ watch(term, () => {
     </div>
     <div class="flex justify-center">
       <loader v-if="loading" />
-    </div>
-    <div v-if="figures.length == 0 && !loading" class="flex justify-center">
-        <p class="text-center mt-10 font-thin">No figures found in this category</p>
     </div>
   </div>
 </template>
