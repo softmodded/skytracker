@@ -67,3 +67,22 @@ export function turnMeanCategoryFriendly(category: String): string {
 
   return friendlyCategory;
 }
+
+export function getNumberFromGame(game: String): Number {
+  switch (game) {
+    case "spyros-adventure-figures":
+      return 0;
+    case "giants-figures":
+      return 1;
+    case "swap-force-figures":
+      return 2;
+    case "trap-team-figures":
+      return 3;
+    case "superchargers-figures":
+      return 4;
+    case "imaginators-figures":
+      return 5;
+    default:
+      return -1;
+  }
+}

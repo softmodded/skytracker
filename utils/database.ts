@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 import DailyMetadata from "~/schemas/dailyMetadata";
 import PartialSkylander from "~/schemas/partialSkylander";
 import Update from "~/schemas/updates";
-require("dotenv").config();
+import { config } from "dotenv";
 
+config();
 
-// @ts-ignore 
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/skylanders");
 
 export async function fetchPartialSkylanders(): Promise<PartialSkylander[]> {
   const skylanders: PartialSkylander[] = await PartialSkylander.find();
@@ -115,6 +115,16 @@ export async function getUpdates(): Promise<Update[]> {
 }
 
 export async function search(term: String): Promise<PartialSkylander[]> {
+  const words = term.replaceAll("%20", " ").split(" ");
+  if (words.length > 1) {
+    const resultsAll: PartialSkylander[] = [];
+    for (const word of words) {
+      const results = await search(word);
+      resultsAll.push(...results);
+    }
+    return resultsAll;
+  }
+  
   const skylanders: PartialSkylander[] = await PartialSkylander.find({
     name: { $regex: term, $options: "i" },
   });
