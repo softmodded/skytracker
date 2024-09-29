@@ -45,7 +45,7 @@ onMounted(fetchNextPage);
 
 // when the user scrolls somewhere near the bottom of the page
 window.onscroll = function () {
-  if (term.value.length > 0) {
+  if (term.value?.length > 0) {
     return;
   }
   if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {

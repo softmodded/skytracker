@@ -26,7 +26,7 @@ function push(url) {
 <template>
   <div
     class="border-2 border-gray-200 rounded-md w-[310px] h-[410px] text-center cursor-pointer transition-all hover:scale-105"
-    @click="push(`/skylanders/${skid}`)"
+    @click="push(`/figures/${skid}`)"
   >
     <div v-if="dailySkylander">
       <p class="my-3 font-thin text-md">skylander of the day</p>

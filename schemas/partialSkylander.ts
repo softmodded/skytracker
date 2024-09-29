@@ -10,6 +10,10 @@ const skylanderSchema = new mongoose.Schema({
   releasedWith: String,
   series: String,
   price: String,
+  links: {
+    ebay: String, 
+    amazon: String
+  }
 }, { versionKey: false });
 
 const PartialSkylander = mongoose.model("PartialSkylander", skylanderSchema);

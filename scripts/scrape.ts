@@ -125,6 +125,16 @@ export async function getSkylanderData(
   } else {
     skylander.price = "N/A";
   }
+
+  const ebayUrl = `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(skylander.name)}&LH_TitleDesc=0&_ipg=100`;
+  const amazonButton = $('.priceamazon');
+  const amazonUrl = amazonButton.attr('href');
+
+  skylander.links = {
+    ebay: ebayUrl,
+    amazon: amazonUrl
+  }
+  
   return skylander;
 }
 
@@ -173,6 +183,7 @@ async function main() {
     figure.releasedWith = moreData.releasedWith;
     figure.series = moreData.series.split(" ")[1];
     figure.price = moreData.price?.split(" ")[0]
+    figure.links = moreData.links;
 
     await savePartialSkylander(figure);
     console.log(`saved figure to database: ${figure.name}`);
