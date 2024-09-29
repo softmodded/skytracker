@@ -12,7 +12,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 onMounted(async () => {
   // give it time to load
   await sleep(500);
-  const response = await fetch(`/api/v1/searching/${props?.skylander?.name}`);
+  const response = await fetch(`/api/v1/searching/${props?.skylander?.name}?related=true`);
   const json = await response.json();
   related.value = json
     .filter((skylander) => skylander._id !== props.skylander._id)

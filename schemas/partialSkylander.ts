@@ -12,7 +12,8 @@ const skylanderSchema = new mongoose.Schema({
   price: String,
   links: {
     ebay: String, 
-    amazon: String
+    amazon: String,
+    scl: String,
   }
 }, { versionKey: false });
 

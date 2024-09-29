@@ -33,7 +33,7 @@ watch(term, () => {
 
   loading.value = true;
 
-  fetch(`/api/v1/searching/${term.value}`).then((result) => {
+  fetch(`/api/v1/searching/${term.value}?related=false`).then((result) => {
     result.json().then((data) => {
       loading.value = false;
       searchedFigures.value = data;

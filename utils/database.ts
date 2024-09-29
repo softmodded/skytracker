@@ -3,6 +3,10 @@ import DailyMetadata from "~/schemas/dailyMetadata";
 import PartialSkylander from "~/schemas/partialSkylander";
 import Update from "~/schemas/updates";
 import { config } from "dotenv";
+import User from "~/schemas/user";
+import { createClerkClient } from "@clerk/backend";
+
+const clerkClient = createClerkClient({ secretKey: process.env.NUXT_CLERK_SECRET_KEY });
 
 config();
 
@@ -114,12 +118,12 @@ export async function getUpdates(): Promise<Update[]> {
   return updates;
 }
 
-export async function search(term: String): Promise<PartialSkylander[]> {
+export async function search(term: String, related: Boolean): Promise<PartialSkylander[]> {
   const words = term.replaceAll("%20", " ").split(" ");
-  if (words.length > 1) {
+  if (words.length > 1 && related) {
     const resultsAll: PartialSkylander[] = [];
     for (const word of words) {
-      const results = await search(word);
+      const results = await search(word, true);
       resultsAll.push(...results);
     }
     return resultsAll;
@@ -129,4 +133,20 @@ export async function search(term: String): Promise<PartialSkylander[]> {
     name: { $regex: term, $options: "i" },
   });
   return skylanders;
+}
+
+export async function fetchUser(id: string): Promise<User | null> {
+  const user: User | null = await User.findOne({ id });
+  if (!user) {
+    const clerkUser = await clerkClient.users.getUser(id);
+    if (!clerkUser) {
+      return null;
+    };
+    const newUser = new User({ id, wishlist: [], figures: [], watching: [], notifications: [] });
+    await newUser.save();
+
+    return newUser as User;
+  }
+
+  return user;
 }

@@ -1,5 +1,6 @@
 <script setup>
 const route = useRoute();
+const router = useRouter();
 const skylander = ref();
 const id = route.params.id;
 const loading = useState("global_loading")
@@ -24,12 +25,12 @@ function capitalizeFirstLetter(string) {
 
 const fetchSkylander = async () => {
   const response = await fetch(`/api/v1/skylanders/${id}`);
+  if (!response.ok) {
+    console.error("Failed to fetch skylander");
+    return router.push("/");
+  }
   skylander.value = await response.json();
 };
-
-function formatName(name) {
-  return name.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
-}
 
 function newTab(url) {
   window.open(url, "_blank");

@@ -81,3 +81,11 @@ interface Update {
     date: Date;
     changes: string[];
 }
+
+interface User {
+    id: string;
+    wishlist: string[];
+    figures: string[];
+    watching: string[];
+    notifications: string[];
+}

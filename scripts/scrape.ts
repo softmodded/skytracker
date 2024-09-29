@@ -102,9 +102,15 @@ export async function getSkylanderData(
   skylander.releasedWith = $(basicInfo[1]).text();
   skylander.series = $(basicInfo[2]).text();
 
-  const priceUrl = `https://skylanderscharacterlist.com/shop/${
-    skylander.link.split("/")[3]
-  }/`;
+  const priceButton = $(".pricescl");
+  let priceUrl = priceButton.attr("href");
+
+  if (!priceUrl) {
+    priceUrl = `https://skylanderscharacterlist.com/shop/${
+      skylander.link.split("/")[3]
+    }/`;
+  }
+
   const priceResponse = await fetch(priceUrl);
   const priceHtml = await priceResponse.text();
   const price$ = cheerio.load(priceHtml);
@@ -117,7 +123,7 @@ export async function getSkylanderData(
 
     // if there are 2 dots
     if (dots && dots.length > 1) {
-      const split = p.split(' ');
+      const split = p.split(" ");
       p = split[0];
     }
 
@@ -126,15 +132,18 @@ export async function getSkylanderData(
     skylander.price = "N/A";
   }
 
-  const ebayUrl = `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(skylander.name)}&LH_TitleDesc=0&_ipg=100`;
-  const amazonButton = $('.priceamazon');
-  const amazonUrl = amazonButton.attr('href');
+  const ebayUrl = `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(
+    skylander.name
+  )}&LH_TitleDesc=0&_ipg=100`;
+  const amazonButton = $(".priceamazon");
+  const amazonUrl = amazonButton.attr("href");
 
   skylander.links = {
     ebay: ebayUrl,
-    amazon: amazonUrl
-  }
-  
+    amazon: amazonUrl,
+    scl: priceUrl,
+  };
+
   return skylander;
 }
 
@@ -182,7 +191,7 @@ async function main() {
     figure.element = moreData.element.toLowerCase();
     figure.releasedWith = moreData.releasedWith;
     figure.series = moreData.series.split(" ")[1];
-    figure.price = moreData.price?.split(" ")[0]
+    figure.price = moreData.price?.split(" ")[0];
     figure.links = moreData.links;
 
     await savePartialSkylander(figure);

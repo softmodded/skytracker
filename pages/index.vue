@@ -1,5 +1,16 @@
 <script setup>
 const { user, isSignedIn } = useUser();
+const userDataState = useState("user");
+
+async function fetchUserData() {
+  if (isSignedIn) {
+    const raw = await fetch(`/api/v1/users/${user.id}`);
+    const data = await raw.json();
+    userDataState.value = data;
+  } else {
+    userDataState.value = null;
+  }
+}
 
 function getGreeting() {
   const localTime = new Date().getHours();
@@ -7,6 +18,8 @@ function getGreeting() {
   if (localTime < 18) return "good afternoon";
   return "good evening";
 }
+
+onMounted(fetchUserData);
 </script>
 
 <template>

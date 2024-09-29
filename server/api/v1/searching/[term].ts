@@ -1,7 +1,8 @@
 import { search } from "~/utils/database";
 
-export default defineCachedEventHandler(async (event) => {
+export default defineEventHandler(async (event) => {
     const term = getRouterParam(event, "term");
+    const query = getQuery(event);
     if (!term) {
         throw createError({
             status: 400,
@@ -9,7 +10,7 @@ export default defineCachedEventHandler(async (event) => {
         })
     }
 
-    const results = await search(term);
+    const results = await search(term, query.related as Boolean);
 
     return results;
 });
