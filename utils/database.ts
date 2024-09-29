@@ -2,8 +2,11 @@ import mongoose from "mongoose";
 import DailyMetadata from "~/schemas/dailyMetadata";
 import PartialSkylander from "~/schemas/partialSkylander";
 import Update from "~/schemas/updates";
+require("dotenv").config();
 
-mongoose.connect("mongodb://localhost/skylanders");
+
+// @ts-ignore 
+mongoose.connect(process.env.MONGODB_URI);
 
 export async function fetchPartialSkylanders(): Promise<PartialSkylander[]> {
   const skylanders: PartialSkylander[] = await PartialSkylander.find();
