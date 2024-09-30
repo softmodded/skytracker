@@ -29,7 +29,7 @@ const games = [
           class="h-8 mt-2"
           alt="Game Image"
         />
-        <Icon class="h-6 w-6 mt-2" v-if="getNumberFromGame(game) <= getNumberFromGame(props?.skylander?.game)" name="material-symbols:check" />
+        <Icon class="h-6 w-6 mt-2" v-if="getNumberFromGame(game) >= getNumberFromGame(props?.skylander?.game)" name="material-symbols:check" />
         <Icon class="h-6 w-6 mt-2" v-else name="material-symbols:close-rounded" />
       </div>
     </div>

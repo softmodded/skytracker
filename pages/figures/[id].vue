@@ -3,7 +3,7 @@ const route = useRoute();
 const router = useRouter();
 const skylander = ref();
 const id = route.params.id;
-const loading = useState("global_loading")
+const loading = useState("global_loading");
 
 const elements = [
   "Air",
@@ -59,13 +59,7 @@ onMounted(fetchSkylander);
             class="mt-4"
             block
             color="blue"
-            @click="
-              newTab(
-                `https://skylanderscharacterlist.com/shop/${
-                  skylander?.link.split('/')[3]
-                }/`
-              )
-            "
+            @click="newTab(skylander?.links?.scl)"
             :label="`${skylander?.price} on SCL`"
           />
           <UButton
@@ -111,7 +105,7 @@ onMounted(fetchSkylander);
               </div>
               <p class="text-lg font-thin">
                 (Series {{ skylander?.series || "1" }})
-              </p>  
+              </p>
             </div>
             <div class="mt-2">
               <UTooltip text="Add to Collection">

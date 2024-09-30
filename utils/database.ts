@@ -138,7 +138,8 @@ export async function search(term: String, related: Boolean): Promise<PartialSky
 export async function fetchUser(id: string): Promise<User | null> {
   const user: User | null = await User.findOne({ id });
   if (!user) {
-    const clerkUser = await clerkClient.users.getUser(id);
+    console.log(id)
+    const clerkUser = await clerkClient.users.getUser(id)
     if (!clerkUser) {
       return null;
     };

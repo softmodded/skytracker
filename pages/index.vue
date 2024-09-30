@@ -4,7 +4,7 @@ const userDataState = useState("user");
 
 async function fetchUserData() {
   if (isSignedIn) {
-    const raw = await fetch(`/api/v1/users/${user.id}`);
+    const raw = await fetch(`/api/v1/users/${user.value.id}`);
     const data = await raw.json();
     userDataState.value = data;
   } else {
@@ -19,7 +19,7 @@ function getGreeting() {
   return "good evening";
 }
 
-onMounted(fetchUserData);
+onMounted(fetchUserData)  ;
 </script>
 
 <template>

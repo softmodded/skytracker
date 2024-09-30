@@ -57,7 +57,7 @@ function goto(link) {
             :src="user.imageUrl"
             size="xl"
             v-if="item === 'account' && isSignedIn"
-            class="absolute right-5 top-5 cursor-pointer"
+            class="absolute right-5 top-7 cursor-pointer border-2 border-gray-200"
             @click="push('/@' + user.username)"
             @mouseover="hovering = true"
           />
