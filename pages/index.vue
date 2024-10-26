@@ -1,12 +1,15 @@
 <script setup>
 const { user, isSignedIn } = useUser();
 const userDataState = useState("user");
+const { getToken } = useAuth();
 
 async function fetchUserData() {
   if (isSignedIn) {
-    const raw = await fetch(`/api/v1/users/${user.value.id}`);
-    const data = await raw.json();
-    userDataState.value = data;
+    const raw = await makeAuthenticatedRequest(
+      `/api/v1/users/me`,
+      await getToken.value()
+    );
+    userDataState.value = raw;
   } else {
     userDataState.value = null;
   }
@@ -19,32 +22,34 @@ function getGreeting() {
   return "good evening";
 }
 
-onMounted(fetchUserData)  ;
+onMounted(fetchUserData);
 </script>
 
 <template>
-  <div class="relative top-10 m-10">
-    <div>
-      <div v-if="isSignedIn" class="mb-10 ml-20">
-        <div class="flex">
-          <UAvatar
-            size="xl"
-            class="w-14 h-14 mr-3"
-            :src="user.imageUrl"
-            :alt="user.username"
-          />
-          <h1 class="text-3xl mt-1">
-            {{ getGreeting() }}, {{ user.username }}
-          </h1>
-        </div>
+  <div class="relative p-4 sm:p-6 md:p-8 lg:p-10">
+    <div v-if="isSignedIn" class="mb-6 md:mb-10">
+      <div class="flex items-center">
+        <UAvatar
+          size="xl"
+          class="w-12 h-12 md:w-14 md:h-14 mr-3"
+          :src="user.imageUrl"
+          :alt="user.username"
+        />
+        <h1 class="text-xl sm:text-2xl md:text-3xl">
+          {{ getGreeting() }}, {{ user.username }}
+        </h1>
       </div>
     </div>
-    <div class="flex justify-center align-middle">
-      <TilesDaily class="mr-5" />
-      <TilesFriends v-if="isSignedIn" />
-      <TilesUpdates class="ml-5" />
+
+    <div
+      class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6"
+    >
+      <TilesDaily class="w-full sm:w-auto" />
+      <TilesFriends v-if="isSignedIn" class="w-full sm:w-auto" />
+      <TilesUpdates class="w-full sm:w-auto" />
     </div>
-    <div class="flex justify-center align-middle mt-5">
+    
+    <div class="mt-4 sm:mt-6">
       <TilesShortcuts />
     </div>
   </div>

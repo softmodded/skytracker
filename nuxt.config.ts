@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     "@nuxt/icon",
     "vue-clerk/nuxt",
     "@nuxt/image",
-    '@formkit/auto-animate/nuxt'
+    '@formkit/auto-animate/nuxt',
+    "@nuxtjs/mdc",
   ],
 });

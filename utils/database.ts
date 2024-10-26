@@ -1,12 +1,11 @@
 import mongoose from "mongoose";
 import DailyMetadata from "~/schemas/dailyMetadata";
 import PartialSkylander from "~/schemas/partialSkylander";
-import Update from "~/schemas/updates";
 import { config } from "dotenv";
 import User from "~/schemas/user";
 import { createClerkClient } from "@clerk/backend";
 
-const clerkClient = createClerkClient({ secretKey: process.env.NUXT_CLERK_SECRET_KEY });
+export const clerkClient = createClerkClient({ secretKey: process.env.NUXT_CLERK_SECRET_KEY });
 
 config();
 
@@ -113,11 +112,6 @@ export async function getPageOfPartials(page: number, filter?: Object): Promise<
   return skylanders;
 }
 
-export async function getUpdates(): Promise<Update[]> {
-  const updates: Update[] = await Update.find();
-  return updates;
-}
-
 export async function search(term: String, related: Boolean): Promise<PartialSkylander[]> {
   const words = term.replaceAll("%20", " ").split(" ");
   if (words.length > 1 && related) {
@@ -150,4 +144,39 @@ export async function fetchUser(id: string): Promise<User | null> {
   }
 
   return user;
+}
+
+export async function fetchWatchingSkylanders(userId: string): Promise<PartialSkylander[]> {
+  const user = await fetchUser(userId);
+  if (!user) {
+    return [];
+  }
+
+  const skylanders: PartialSkylander[] = await PartialSkylander.find({
+    _id: { $in: user.watching },
+  });
+  return skylanders;
+}
+
+export async function toggleWatchingSkylander(userId: string, skylanderId: string): Promise<boolean> {
+  const user = await fetchUser(userId);
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  let result
+
+  const index = user.watching.indexOf(skylanderId);
+  if (index === -1) {
+    user.watching.push(skylanderId);
+    result = true;
+    
+  } else {
+    user.watching.splice(index, 1);
+    result = false;
+  }
+
+  // @ts-ignore
+  await user.save();
+  return result;
 }

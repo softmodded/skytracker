@@ -23,6 +23,11 @@ const isDark = computed({
 function goto(link) {
   window.location.href = link;
 }
+
+function hover() {
+  hovering.value = !hovering.value;
+  console.log(hovering.value);
+}
 </script>
 
 <template>
@@ -52,19 +57,16 @@ function goto(link) {
           />
         </div>
 
-        <div @mouseleave="hovering = false">
+        <div @click="hover">
           <UAvatar
             :src="user.imageUrl"
             size="xl"
             v-if="item === 'account' && isSignedIn"
             class="absolute right-5 top-7 cursor-pointer border-2 border-gray-200"
-            @click="push('/@' + user.username)"
-            @mouseover="hovering = true"
           />
           <div
             v-if="item === 'account' && isSignedIn"
             class="absolute right-20 top-5 cursor-pointer h-40"
-            v-on:mouseover="hovering = true"
           >
             <div v-if="hovering && !isDark" class="z-[10000000]">
               <UButton

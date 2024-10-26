@@ -1,9 +1,12 @@
 <script setup>
 const route = useRoute();
 const router = useRouter();
+const { getToken } = useAuth();
 const skylander = ref();
 const id = route.params.id;
+const toast = useToast();
 const loading = useState("global_loading");
+const watching = ref(false);
 
 const elements = [
   "Air",
@@ -30,6 +33,17 @@ const fetchSkylander = async () => {
     return router.push("/");
   }
   skylander.value = await response.json();
+
+  const watching = await makeAuthenticatedRequest(
+    `/api/v1/watching/fetch`,
+    await getToken.value()
+  );
+
+  watching.forEach((watch) => {
+    if (watch.skylander == id) {
+      watching.value = true;
+    }
+  });
 };
 
 function newTab(url) {
@@ -40,6 +54,29 @@ function getElement(element) {
   if (!element) return "other";
   const e = elements.find((e) => e.toLowerCase() === element.toLowerCase());
   return e ? e : "other";
+}
+
+async function watchPrice() {
+  const response = await makeAuthenticatedRequest(
+    `/api/v1/watching/modify/${id}`,
+    await getToken.value()
+  );
+
+  if (response.result == true) {
+    toast.add({
+      title: "Success",
+      description: "Skylander added to watchlist",
+      type: "success",
+    });
+    watching.value = true;
+  } else {
+    toast.add({
+      title: "Success",
+      description: "Skylander removed from watchlist",
+      type: "success",
+    });
+    watching.value = false;
+  }
 }
 
 onMounted(fetchSkylander);
@@ -117,12 +154,24 @@ onMounted(fetchSkylander);
                   variant="solid"
                 />
               </UTooltip>
-              <UTooltip text="Watch price">
+              <UTooltip v-if="watching == false" text="Watch price">
                 <UButton
                   icon="i-heroicons-eye"
                   size="sm"
                   color="white"
                   square
+                  @click="watchPrice"
+                  class="mx-2.5"
+                  variant="solid"
+                />
+              </UTooltip>
+              <UTooltip v-if="watching == true" text="Stop watching">
+                <UButton
+                  icon="i-heroicons-eye-slash"
+                  size="sm"
+                  color="white"
+                  square
+                  @click="watchPrice"
                   class="mx-2.5"
                   variant="solid"
                 />

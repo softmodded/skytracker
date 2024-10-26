@@ -1,8 +1,5 @@
-import { fetchUser } from "~/utils/database";
-
 export default defineEventHandler(async (event) => {
-  const id = getRouterParam(event, "id");
-  const user = await fetchUser(id as string);
+  const user = event.context.user;
 
   if (!user) {
     throw createError({

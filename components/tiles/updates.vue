@@ -1,34 +1,53 @@
 <script setup>
 const router = useRouter();
+const { getToken } = useAuth();
+const updates = ref([]);
+
+async function fetchUpdates() {
+  updates.value = await makeAuthenticatedRequest(
+    `/api/v1/metadata/updates`,
+    await getToken.value()
+  );
+
+  updates.value = updates.value.slice(0, 2);
+
+  for (const update of updates.value) {
+    update.body = update.body.split("\n");
+    update.body = update.body.slice(0, 4);    
+  }
+}
+
+onMounted(fetchUpdates);
 
 function push(link) {
-    router.push(link);
+  router.push(link);
+}
+
+function newTab(url) {
+  window.open(url, "_blank");
 }
 </script>
 
 <template>
-    <div>
-        <div class="border-2 border-gray-200 rounded-md w-[310px] h-[410px] text-center">
-            <h1 class="mt-4 font-bold text-2xl">updates</h1>
-            <h3 class="mt-2 font-semibold text-xl">2024-9-28</h3>
-            <ul class="mt-0.5">
-                <li>- added new skylanders</li>
-                <li>- added new figures</li>
-                <li>- added new games</li>
-                <li>- added new features</li>
-                <a href="#" @click="push('/updates/2024-9-28')" class="underline">see more →</a>
-            </ul>
-
-            <h3 class="mt-4 font-semibold text-xl">2024-9-28</h3>
-            <ul class="mt-0.5">
-                <li>- added new skylanders</li>
-                <li>- added new figures</li>
-                <li>- added new games</li>
-                <li>- added new features</li>
-                <a href="#" @click="push('/updates/2024-9-28')" class="underline">see more →</a>
-            </ul>
-
-            
-        </div>
+  <div>
+    <div
+      class="border-2 border-gray-200 rounded-md w-[310px] h-[410px] text-center"
+    >
+      <h1 class="mt-4 font-bold text-2xl">updates</h1>
+      <div v-for="(update, index) in updates" :key="index">
+        <h3 class="mt-2 font-semibold text-xl">{{ update.name }}</h3>
+        <ul class="mt-7">
+          <li v-for="(line, index) in update.body" :key="index" class="truncate -my-6">
+            <MDC :value="'­' + line"  tag="changelog" />
+            <br />
+          </li>
+          <a
+            @click="newTab(update.html_url)"
+            class="underline cursor-pointer"
+            >see more →</a
+          >
+        </ul>
+      </div>
     </div>
+  </div>
 </template>

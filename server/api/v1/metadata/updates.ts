@@ -1,6 +1,5 @@
-import { getUpdates } from "~/utils/database";
-
 export default defineEventHandler(async (event) => {
-    const updates = await getUpdates();
-    return updates;
+    const releasesraw = await fetch('https://api.github.com/repos/softmodded/skytracker/releases')
+    const releases = await releasesraw.json()
+    return releases
 });
