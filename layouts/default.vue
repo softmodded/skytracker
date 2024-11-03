@@ -10,7 +10,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <div v-if="loading" class="flex items-center justify-center align-middle h-full mt-10">
+    <div v-if="loading" class="flex items-center justify-center align-middle  mt-10">
       <div class="spinner">
         <div></div>
         <div></div>
@@ -26,7 +26,7 @@ onMounted(() => {
         <div></div>
       </div>
     </div>
-    <div v-if="!loading"><navbar class="mb-16 z-50" /> <slot class="-z-50" /></div>
+    <div v-if="!loading"><navbar class="mb-16 h-0 z-50" /> <slot /></div>
   </div>
 </template>
 

@@ -26,7 +26,7 @@ onMounted(fetchUserData);
 </script>
 
 <template>
-  <div class="relative p-4 sm:p-6 md:p-8 lg:p-10">
+  <div class="relative p-6 sm:p-6 md:p-8 lg:p-10 z-10">
     <div v-if="isSignedIn" class="mb-6 md:mb-10">
       <div class="flex items-center">
         <UAvatar

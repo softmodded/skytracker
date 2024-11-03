@@ -88,4 +88,19 @@ interface User {
     figures: string[];
     watching: string[];
     notifications: string[];
+    settings: Settings;
+}
+
+interface Notification {
+    date: Date;
+    message: string;
+    title: string;
+    _id: string;
+}
+
+interface Settings {
+    collectionVisibility: boolean;
+    wishlistVisibility: boolean;
+    watchingVisibility: boolean;
+    language: string;
 }

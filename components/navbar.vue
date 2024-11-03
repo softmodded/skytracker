@@ -33,7 +33,7 @@ function hover() {
 <template>
   <div>
     <div
-      class="flex mx-auto align-middle justify-center w-72 text-center select-none"
+      class="flex mx-auto align-middle justify-center w-72 h-0 text-center pt-5 select-none z-50"
     >
       <div v-for="item in items" :key="item.name || item" class="mx-auto">
         <img
@@ -82,13 +82,6 @@ function hover() {
                 <template #leading>
                   <UAvatar :src="user.imageUrl" size="2xs" /> </template
               ></UButton>
-              <UButton
-                color="white"
-                @click="push('/my/collection')"
-                :ui="{ rounded: 'rounded-none' }"
-                block
-                >My Collection</UButton
-              >
               <div
                 class="flex border-gray-200 border-b-[2px] border-x-[2px] mx-auto text-center"
               >
@@ -241,7 +234,7 @@ function hover() {
                       color="white"
                       :ui="{ rounded: 'rounded-none' }"
                       :trailing="false"
-                      @click="goto('/logout')"
+                      @click="clerk.signOut()"
                       class="mx-auto text-center"
                     />
                   </UTooltip>

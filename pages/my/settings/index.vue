@@ -1,0 +1,193 @@
+<script setup>
+const settingsMetadata = ref();
+const tabData = ref([]);
+const { user } = useUser();
+const page = ref("website");
+const clerk = useClerk();
+const toast = useToast();
+const userSettings = ref();
+const { getToken } = useAuth();
+const route = useRoute();
+const privacySettings = ref({});
+const router = useRouter();
+const language = ref("English");
+
+const languages = ["English", "Spanish", "French", "German", "Italian"];
+
+const goto = (path) => router.push(path);
+
+async function fetchMetadata() {
+  const response = await fetch("/api/v1/settings/fetch");
+  settingsMetadata.value = await response.json();
+  const arr = [];
+  console.log(user.value);
+  tabData.value.push([
+    {
+      avatar: {
+        src: user.value.imageUrl,
+        size: "2xl",
+      },
+      label: user.value.username,
+      click: () => {
+        page.value = "profile";
+      },
+    },
+  ]);
+  settingsMetadata.value.categories.forEach(async (category) => {
+    arr.push({
+      icon: settingsMetadata.value[category].icon,
+      label: turnStringNice(category),
+      click: () => {
+        page.value = category;
+      },
+    });
+  });
+
+  tabData.value.push(arr);
+
+  tabData.value.push([
+    {
+      label: "Log out",
+      icon: "material-symbols:logout",
+      click: () => {
+        clerk.signOut();
+      },
+    },
+  ]);
+
+  const userSettingRes = await makeAuthenticatedRequest(
+    `/api/v1/settings/me/fetch`,
+    await getToken.value()
+  );
+
+  userSettings.value = userSettingRes;
+  privacySettings.value.collection = userSettingRes.collectionVisibility;
+  privacySettings.value.wishlist = userSettingRes.wishlistVisibility;
+  privacySettings.value.watching = userSettingRes.watchingVisibility;
+  language.value = turnStringNice(userSettingRes.language);
+  console.log(userSettingRes);
+}
+
+watch(page, (newPage) => {
+  goto(`/my/settings?page=${newPage}`);
+});
+
+onMounted(() => {
+  page.value = route.query.page || "website";
+  setTimeout(() => {
+    fetchMetadata();
+  }, 500);
+});
+
+async function updateSetting(key, value) {
+  const res = await makeAuthenticatedPostRequest(
+    `/api/v1/settings/me/update`,
+    await getToken.value(),
+    {
+      setting: key,
+      value: value,
+    }
+  );
+
+  toast.add({
+    title: "Message",
+    description: res.message,
+  });
+}
+</script>
+
+<template>
+  <div class="flex">
+    <div class="w-64">
+      <UVerticalNavigation :links="tabData" />
+    </div>
+    <div v-if="page == 'profile'">
+      <UserProfile class="h-10" />
+    </div>
+    <div>
+      <h1 v-if="page != 'profile'" class="text-xl mx-auto">
+        {{ page }} settings
+      </h1>
+      <div class="mt-5 ml-10" v-if="page == 'website'">
+        <h1 class="text-xl">language</h1>
+        <p class="text-sm font-light text-gray-600 mb-2">
+          choose the language you'd like to see skytracker in
+        </p>
+        <USelectMenu
+          v-model="language"
+          :options="languages"
+          @change="updateSetting('language', language.toLowerCase())"
+        />
+      </div>
+      <div class="mt-5 ml-10" v-if="page == 'privacy'">
+        <h1 class="text-xl">collection visibility</h1>
+        <p class="text-sm font-light text-gray-600 mb-2">
+          change the visibility of your collection
+        </p>
+        <div class="flex">
+          <UToggle
+            v-model="privacySettings.collection"
+            @change="
+              updateSetting('collectionVisibility', privacySettings.collection)
+            "
+          />
+          <p
+            class="text-sm font-light text-gray-600 ml-2"
+            v-if="privacySettings?.collection == true"
+          >
+            public
+          </p>
+          <p class="text-sm font-light text-gray-600 ml-2" v-else>private</p>
+        </div>
+        <h1 class="text-xl">wishlist visibility</h1>
+        <p class="text-sm font-light text-gray-600 mb-2">
+          change the visibility of your wishlist
+        </p>
+        <div class="flex">
+          <UToggle
+            v-model="privacySettings.wishlist"
+            @change="
+              updateSetting('wishlistVisibility', privacySettings.wishlist)
+            "
+          />
+          <p
+            class="text-sm font-light text-gray-600 ml-2"
+            v-if="privacySettings?.wishlist == true"
+          >
+            public
+          </p>
+          <p class="text-sm font-light text-gray-600 ml-2" v-else>private</p>
+        </div>
+        <h1 class="text-xl">watching visibility</h1>
+        <p class="text-sm font-light text-gray-600 mb-2">
+          change the visibility of your watching list
+        </p>
+        <div class="flex">
+          <UToggle
+            v-model="privacySettings.watching"
+            @change="
+              updateSetting('watchingVisibility', privacySettings.watching)
+            "
+          />
+          <p
+            class="text-sm font-light text-gray-600 ml-2"
+            v-if="privacySettings?.watching == true"
+          >
+            public
+          </p>
+          <p class="text-sm font-light text-gray-600 ml-2" v-else>private</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style>
+.cl-cardBox {
+  box-shadow: none;
+  border: none;
+  height: 41.1rem;
+  margin-top: 1.5rem;
+  width: 89rem;
+}
+</style>

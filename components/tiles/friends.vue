@@ -3,6 +3,7 @@ const { getToken } = useAuth();
 const watching = ref([]);
 const router = useRouter();
 const updates = ref([]);
+const notifications = ref([]);
 const pages = ref([]);
 const currentPage = ref(1);
 function push(link) {
@@ -25,6 +26,17 @@ async function fetchWatching() {
   }, []);
 }
 
+async function fetchNotifications() {
+  notifications.value = await makeAuthenticatedRequest(
+    `/api/v1/messages/fetch`,
+    await getToken.value()
+  );
+
+  // slice the notifications array to only show the latest 3
+  notifications.value = notifications.value.slice(0, 3);
+}
+
+onMounted(fetchNotifications);
 onMounted(fetchWatching);
 
 function nextPage() {
@@ -44,29 +56,31 @@ function prevPage() {
   <div class="w-full max-w-[620px]">
     <!-- Notifications Section -->
     <div
-      class="border-2 border-gray-200 rounded-md w-full h-auto mb-5 text-center"
+      class="border-2 border-gray-200 rounded-md h-auto mb-5 text-center w-[38rem] "
     >
       <div class="flex items-center p-3">
         <Icon name="material-symbols:notifications-outline" class="w-6 h-6" />
         <h1 class="ml-2 text-left font-semibold text-lg">notifications</h1>
       </div>
       <div
-        v-for="(_, index) in 3"
+        v-for="(message, index) in notifications"
         :key="index"
         class="w-full p-2 flex border-t-2 border-gray-200 cursor-pointer hover:bg-gray-100 transition-all"
       >
         <p class="font-bold text-base sm:text-lg w-1/4 text-left truncate mr-2">
-          Price drop alert!
+          {{ message.title }}
         </p>
         <p class="text-sm sm:text-base truncate">
-          The price for <strong>Stump smash</strong> has dropped below your
-          threshold of <strong>$21.99</strong>
+          {{ message.message }}
         </p>
+      </div>
+      <div v-if="notifications.length === 0" class="my-[4rem] ">
+        <p class="text-sm sm:text-base">all caught up!</p>
       </div>
       <div class="p-2 border-t-2 border-gray-200">
         <a
           href="#"
-          @click.prevent="push('/updates/2024-9-28')"
+          @click.prevent="push('/notifications')"
           class="underline text-sm sm:text-base"
           >see more →</a
         >
@@ -74,7 +88,7 @@ function prevPage() {
     </div>
 
     <!-- Characters Section -->
-    <div class="mt-4 border-2 border-gray-200 rounded-md w-full h-auto">
+    <div class="mt-4 border-2 border-gray-200 rounded-md w-full h-full">
       <div class="flex flex-wrap justify-between ">
         <UButton
           icon="i-heroicons-arrow-left"

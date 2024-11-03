@@ -35,7 +35,7 @@ const routeWatcher = watch(() => route.path, (path) => {
       <NuxtLayout>
         <NuxtPage />
         <!--at the bottom left corner of the page (never moves)-->
-        <div class="fixed bottom-0 left-0 p-4">
+        <!--div class="fixed bottom-0 left-0 p-4">
           <UButton
             :icon="
               isDark ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'
@@ -45,7 +45,7 @@ const routeWatcher = watch(() => route.path, (path) => {
             aria-label="Theme"
             @click="isDark = !isDark"
           />
-        </div>
+        </!--div-->
       </NuxtLayout>
     <UNotifications />
   </div>

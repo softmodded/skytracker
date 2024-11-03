@@ -2,11 +2,12 @@
 const route = useRoute();
 const router = useRouter();
 const { getToken } = useAuth();
+const isWatching = ref(false);
+const inCollection = ref(false);
+const onWishlist = ref(false);
 const skylander = ref();
 const id = route.params.id;
 const toast = useToast();
-const loading = useState("global_loading");
-const watching = ref(false);
 
 const elements = [
   "Air",
@@ -40,8 +41,36 @@ const fetchSkylander = async () => {
   );
 
   watching.forEach((watch) => {
-    if (watch.skylander == id) {
-      watching.value = true;
+    if (watch._id.toString() == id) {
+      console.log("watching");
+      isWatching.value = true;
+      console.log(isWatching.value);
+    }
+  });
+
+  const collection = await makeAuthenticatedRequest(
+    `/api/v1/collections/fetch`,
+    await getToken.value()
+  );
+
+  collection.forEach((col) => {
+    if (col._id.toString() == id) {
+      console.log("in collection");
+      inCollection.value = true;
+      console.log(inCollection.value);
+    }
+  });
+
+  const wishlist = await makeAuthenticatedRequest(
+    `/api/v1/wishlist/fetch`,
+    await getToken.value()
+  );
+
+  wishlist.forEach((wish) => {
+    if (wish._id.toString() == id) {
+      console.log("on wishlist");
+      onWishlist.value = true;
+      console.log(onWishlist.value);
     }
   });
 };
@@ -68,14 +97,60 @@ async function watchPrice() {
       description: "Skylander added to watchlist",
       type: "success",
     });
-    watching.value = true;
+    isWatching.value = true;
   } else {
     toast.add({
       title: "Success",
       description: "Skylander removed from watchlist",
       type: "success",
     });
-    watching.value = false;
+    isWatching.value = false;
+  }
+}
+
+async function toggleCollection() {
+  const response = await makeAuthenticatedRequest(
+    `/api/v1/collections/modify/${id}`,
+    await getToken.value()
+  );
+
+  if (response.result == true) {
+    toast.add({
+      title: "Success",
+      description: "Skylander added to collection",
+      type: "success",
+    });
+    inCollection.value = true;
+  } else {
+    toast.add({
+      title: "Success",
+      description: "Skylander removed from collection",
+      type: "success",
+    });
+    inCollection.value = false;
+  }
+}
+
+async function toggleWishlist() {
+  const response = await makeAuthenticatedRequest(
+    `/api/v1/wishlist/modify/${id}`,
+    await getToken.value()
+  );
+
+  if (response.result == true) {
+    toast.add({
+      title: "Success",
+      description: "Skylander added to wishlist",
+      type: "success",
+    });
+    onWishlist.value = true;
+  } else {
+    toast.add({
+      title: "Success",
+      description: "Skylander removed from wishlist",
+      type: "success",
+    });
+    onWishlist.value = false;
   }
 }
 
@@ -145,16 +220,27 @@ onMounted(fetchSkylander);
               </p>
             </div>
             <div class="mt-2">
-              <UTooltip text="Add to Collection">
+              <UTooltip v-if="!inCollection" text="Add to Collection">
                 <UButton
                   icon="i-heroicons-plus"
                   size="sm"
                   color="white"
+                  @click="toggleCollection"
                   square
                   variant="solid"
                 />
               </UTooltip>
-              <UTooltip v-if="watching == false" text="Watch price">
+              <UTooltip v-if="inCollection" text="In your collection">
+                <UButton
+                  icon="material-symbols:check"
+                  size="sm"
+                  color="white"
+                  @click="toggleCollection"
+                  square
+                  variant="solid"
+                />
+              </UTooltip>
+              <UTooltip v-if="!isWatching" text="Watch price">
                 <UButton
                   icon="i-heroicons-eye"
                   size="sm"
@@ -165,7 +251,7 @@ onMounted(fetchSkylander);
                   variant="solid"
                 />
               </UTooltip>
-              <UTooltip v-if="watching == true" text="Stop watching">
+              <UTooltip v-if="isWatching" text="Stop watching">
                 <UButton
                   icon="i-heroicons-eye-slash"
                   size="sm"
@@ -176,9 +262,20 @@ onMounted(fetchSkylander);
                   variant="solid"
                 />
               </UTooltip>
-              <UTooltip text="Add to wishlist">
+              <UTooltip v-if="!onWishlist" text="Add to wishlist">
                 <UButton
-                  icon="material-symbols-light:lists"
+                  @click="toggleWishlist"
+                  icon="material-symbols-light:playlist-add"
+                  size="sm"
+                  color="white"
+                  square
+                  variant="solid"
+                />
+              </UTooltip>
+              <UTooltip v-if="onWishlist" text="On your wishlist">
+                <UButton
+                  @click="toggleWishlist"
+                  icon="material-symbols-light:playlist-add-check"
                   size="sm"
                   color="white"
                   square

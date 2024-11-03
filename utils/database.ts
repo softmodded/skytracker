@@ -140,6 +140,7 @@ export async function fetchUser(id: string): Promise<User | null> {
     const newUser = new User({ id, wishlist: [], figures: [], watching: [], notifications: [] });
     await newUser.save();
 
+    // @ts-ignore
     return newUser as User;
   }
 
@@ -179,4 +180,104 @@ export async function toggleWatchingSkylander(userId: string, skylanderId: strin
   // @ts-ignore
   await user.save();
   return result;
+}
+
+export async function toggleCollectionSkylander(userId: string, skylanderId: string): Promise<boolean> {
+  const user = await fetchUser(userId);
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  let result
+
+  const index = user.figures.indexOf(skylanderId);
+  if (index === -1) {
+    user.figures.push(skylanderId);
+    result = true;
+    
+  } else {
+    user.figures.splice(index, 1);
+    result = false;
+  }
+
+  // @ts-ignore
+  await user.save();
+  return result;
+}
+
+export async function fetchMessages(userId: string) {
+  const user = await fetchUser(userId);
+  if (!user) {
+    return [];
+  }
+
+  return user.notifications;
+}
+
+export async function fetchCollection(userId: string): Promise<PartialSkylander[]> {
+  const user = await fetchUser(userId);
+  if (!user) {
+    return [];
+  }
+
+  const skylanders: PartialSkylander[] = await PartialSkylander.find({
+    _id: { $in: user.figures },
+  });
+  return skylanders;
+}
+
+export async function toggleWishlist(userId: string, skylanderId: string): Promise<boolean> {
+  const user = await fetchUser(userId);
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  let result
+
+  const index = user.wishlist.indexOf(skylanderId);
+  if (index === -1) {
+    user.wishlist.push(skylanderId);
+    result = true;
+    
+  } else {
+    user.wishlist.splice(index, 1);
+    result = false;
+  }
+
+  // @ts-ignore
+  await user.save();
+  return result;
+}
+
+export async function fetchWishlist(userId: string): Promise<PartialSkylander[]> {
+  const user = await fetchUser(userId);
+  if (!user) {
+    return [];
+  }
+
+  const skylanders: PartialSkylander[] = await PartialSkylander.find({
+    _id: { $in: user.wishlist },
+  });
+  return skylanders;
+}
+
+export async function fetchSettings(userId: string): Promise<Settings> {
+  const user = await fetchUser(userId);
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return user.settings;
+}
+
+export async function modifySetting(userId: string, setting: string, value: any): Promise<void> {
+  const user = await fetchUser(userId);
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  // @ts-ignore
+  user.settings[setting] = value;
+  // @ts-ignore
+  await user.save();
 }
