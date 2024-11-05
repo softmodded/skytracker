@@ -1,5 +1,7 @@
+
+
 export async function makeAuthenticatedRequest(endpoint: String, jwt: String) {
-    const response = await fetch(`http://localhost:3000${endpoint}`, {
+    const response = await fetch(`${endpoint}`, {
         // @ts-ignore
         headers: {
             "ST-Auth-Token": jwt
@@ -14,7 +16,7 @@ export async function makeAuthenticatedRequest(endpoint: String, jwt: String) {
 }
 
 export async function makeAuthenticatedPostRequest(endpoint: String, jwt: String, body: Object) {
-    const response = await fetch(`http://localhost:3000${endpoint}`, {
+    const response = await fetch(`${endpoint}`, {
         // @ts-ignore
         headers: {
             "ST-Auth-Token": jwt

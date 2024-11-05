@@ -1,7 +1,7 @@
 <script setup>
 const router = useRouter();
 const { getToken } = useAuth();
-const updates = ref([]);
+const updates = useState("updates");
 
 async function fetchUpdates() {
   updates.value = await makeAuthenticatedRequest(

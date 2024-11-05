@@ -8,6 +8,6 @@ export default eventHandler(async (event) => {
       message: "Missing id",
     });
   }
-  const watching = await fetchWatchingSkylanders(userid);
+  const watching = await fetchWatchingSkylanders(userid, false);
   return watching;
 });

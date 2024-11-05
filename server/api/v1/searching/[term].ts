@@ -1,4 +1,5 @@
 import { search } from "~/utils/database";
+import { filterString } from "~/utils/string";
 
 export default defineEventHandler(async (event) => {
     const term = getRouterParam(event, "term");
@@ -10,7 +11,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const results = await search(term, query.related as Boolean);
+    const results = await search(filterString(term), query.related as Boolean);
 
     return results;
 });

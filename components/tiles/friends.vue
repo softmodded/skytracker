@@ -15,7 +15,7 @@ async function fetchWatching() {
     `/api/v1/watching/fetch`,
     await getToken.value()
   );
-  // split the watching array into chunks of 
+  // split the watching array into chunks of
   pages.value = watching.value.reduce((resultArray, item, index) => {
     const chunkIndex = Math.floor(index / 5);
     if (!resultArray[chunkIndex]) {
@@ -56,7 +56,7 @@ function prevPage() {
   <div class="w-full max-w-[620px]">
     <!-- Notifications Section -->
     <div
-      class="border-2 border-gray-200 rounded-md h-auto mb-5 text-center w-[38rem] "
+      class="border-2 border-gray-200 rounded-md h-auto mb-5 text-center w-[38rem]"
     >
       <div class="flex items-center p-3">
         <Icon name="material-symbols:notifications-outline" class="w-6 h-6" />
@@ -74,7 +74,7 @@ function prevPage() {
           {{ message.message }}
         </p>
       </div>
-      <div v-if="notifications.length === 0" class="my-[4rem] ">
+      <div v-if="notifications.length === 0" class="my-[4rem]">
         <p class="text-sm sm:text-base">all caught up!</p>
       </div>
       <div class="p-2 border-t-2 border-gray-200">
@@ -89,7 +89,7 @@ function prevPage() {
 
     <!-- Characters Section -->
     <div class="mt-4 border-2 border-gray-200 rounded-md w-full h-full">
-      <div class="flex flex-wrap justify-between ">
+      <div class="flex flex-wrap justify-between">
         <UButton
           icon="i-heroicons-arrow-left"
           size="sm"
@@ -99,6 +99,14 @@ function prevPage() {
           class="border-none"
           variant="ghost"
         />
+
+        <p
+          v-if="pages.length == 0"
+          class="text-sm sm:text-base mx-auto my-auto h-[8.7rem] pt-14"
+        >
+          watching list is empty
+        </p>
+
         <div class="flex flex-wrap justify-center">
           <div
             v-for="(skylander, index) in pages[currentPage - 1]"

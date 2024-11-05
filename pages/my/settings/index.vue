@@ -189,5 +189,6 @@ async function updateSetting(key, value) {
   height: 41.1rem;
   margin-top: 1.5rem;
   width: 89rem;
+  border-radius: 0;
 }
 </style>

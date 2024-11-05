@@ -2,6 +2,6 @@ import { fetchWishlist } from "~/utils/database";
 
 export default eventHandler(async (event) => {
     const userid = event.context.user.id;
-    const watching = await fetchWishlist(userid);
+    const watching = await fetchWishlist(userid, true);
     return watching;
 });

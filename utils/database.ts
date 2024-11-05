@@ -147,11 +147,16 @@ export async function fetchUser(id: string): Promise<User | null> {
   return user;
 }
 
-export async function fetchWatchingSkylanders(userId: string): Promise<PartialSkylander[]> {
+export async function fetchWatchingSkylanders(userId: string, mine: boolean): Promise<PartialSkylander[]> {
   const user = await fetchUser(userId);
   if (!user) {
     return [];
   }
+
+  if (!mine && user.settings.watchingVisibility === false) {
+    return [];
+  }
+
 
   const skylanders: PartialSkylander[] = await PartialSkylander.find({
     _id: { $in: user.watching },
@@ -214,9 +219,13 @@ export async function fetchMessages(userId: string) {
   return user.notifications;
 }
 
-export async function fetchCollection(userId: string): Promise<PartialSkylander[]> {
+export async function fetchCollection(userId: string, mine: boolean): Promise<PartialSkylander[]> {
   const user = await fetchUser(userId);
   if (!user) {
+    return [];
+  }
+
+  if (!mine && user.settings.collectionVisibility === false) {
     return [];
   }
 
@@ -249,9 +258,13 @@ export async function toggleWishlist(userId: string, skylanderId: string): Promi
   return result;
 }
 
-export async function fetchWishlist(userId: string): Promise<PartialSkylander[]> {
+export async function fetchWishlist(userId: string, mine: boolean): Promise<PartialSkylander[]> {
   const user = await fetchUser(userId);
   if (!user) {
+    return [];
+  }
+
+  if (!mine && user.settings.wishlistVisibility === false) {
     return [];
   }
 
