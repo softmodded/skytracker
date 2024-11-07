@@ -16,7 +16,7 @@ export default defineNuxtConfig({
   },
   build: {
     rollupOptions: {
-      external: ["vue-clerk", "clerk/backend"],
+      external: ["vue-clerk", "clerk/backend", "@clerk/shared/handleValueOrFn"],
     }
   }
 });
