@@ -13,5 +13,10 @@ export default defineNuxtConfig({
   colorMode: {
     fallback: "light",
     preference: "light"
+  },
+  build: {
+    rollupOptions: {
+      external: ["vue-clerk", "clerk/backend"],
+    }
   }
 });
