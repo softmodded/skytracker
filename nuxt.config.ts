@@ -14,9 +14,12 @@ export default defineNuxtConfig({
     fallback: "light",
     preference: "light"
   },
-  build: {
-    rollupOptions: {
-      external: ["vue-clerk", "clerk/backend", "@clerk/shared/handleValueOrFn"],
-    }
+
+  vite: {
+    build: {
+      rollupOptions: {
+        external: ["vue-clerk", "clerk/backend", "@clerk/shared/handleValueOrFn"],
+      }
+    },
   }
 });
