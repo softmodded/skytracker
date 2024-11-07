@@ -3,6 +3,8 @@ definePageMeta({
   layout: "gallary-wishlist",
 });
 
+useHead({ title: "skytracker - your wishlist" }); 
+
 const router = useRouter();
 const push = (path) => router.push(path);
 const { getToken } = useAuth();

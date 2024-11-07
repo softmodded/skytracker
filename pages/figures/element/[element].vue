@@ -3,6 +3,8 @@ definePageMeta({
   layout: "gallary",
 });
 
+useHead({ title: "skytracker - figures" });
+
 const router = useRouter();
 const push = (path) => router.push(path);
 

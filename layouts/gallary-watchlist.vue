@@ -190,7 +190,7 @@ function clearFilters() {
     <div v-if="!loading">
       <navbar class="mb-16 z-50" />
       <h1 class="text-center mx-auto font-semibold mt-32 text-4xl mb-10">
-        {{ route.params.username + "'s" || "your" }}  collection
+        {{ route.params.username + "'s" || "your" }}  watchlist
       </h1>
       <div v-auto-animate class="flex mt-2 align-middle justify-center">
         <UButton

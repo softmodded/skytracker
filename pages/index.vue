@@ -3,7 +3,10 @@ const { user, isSignedIn } = useUser();
 const userDataState = useState("user");
 const { getToken } = useAuth();
 
+useHead({ title: "skytracker"})
+
 async function fetchUserData() {
+  localStorage.theme = 'light';
   if (isSignedIn) {
     const raw = await makeAuthenticatedRequest(
       `/api/v1/users/me`,

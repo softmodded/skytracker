@@ -10,4 +10,8 @@ export default defineNuxtConfig({
     '@formkit/auto-animate/nuxt',
     "@nuxtjs/mdc",
   ],
+  colorMode: {
+    fallback: "light",
+    preference: "light"
+  }
 });

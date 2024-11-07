@@ -1,9 +1,9 @@
 <script setup>
 definePageMeta({
-  layout: "gallary-collection",
+  layout: "gallary-watchlist",
 });
 
-useHead({ title: "skytracker - your collection" });
+useHead({ title: "skytracker - viewing watchlist" });
 
 const router = useRouter();
 const push = (path) => router.push(path);
@@ -16,12 +16,15 @@ const term = useState("searchTerm");
 const currentGameFilter = useState("currentGameFilter");
 const currentCategoryFilter = useState("currentCategoryFilter");
 const currentElementFilter = useState("currentElementFilter");
+const route = useRoute();
 
 async function loadFigures() {
+  const userdata = await fetch(`/api/v1/users/${route.params.username}/fetch`);
+    const user = await userdata.json();
   loading.value = true;
   currentPage.value += 1;
   const collection = await makeAuthenticatedRequest(
-    `/api/v1/collections/fetch`,
+    `/api/v1/watching/user/${user.id}`,
     await getToken.value()
   );
 
@@ -30,9 +33,9 @@ async function loadFigures() {
     const skylanderData = await skylander.json();
 
     figure = { ...figure, ...skylanderData };
-  })
-  
-  figures.value = collection
+  });
+
+  figures.value = collection;
   searchedFigures.value = figures.value;
   loading.value = false;
 
@@ -78,7 +81,9 @@ watch(currentCategoryFilter, () => {
   loading.value = true;
 
   searchedFigures.value = figures.value.filter(
-    (figure) => figure.category.toLowerCase() === turnFriendlyCategoryMean(currentCategoryFilter.value).toLowerCase()
+    (figure) =>
+      figure.category.toLowerCase() ===
+      turnFriendlyCategoryMean(currentCategoryFilter.value).toLowerCase()
   );
 
   console.log(currentCategoryFilter.value);
@@ -95,7 +100,8 @@ watch(currentElementFilter, () => {
   loading.value = true;
 
   searchedFigures.value = figures.value.filter(
-    (figure) => figure.element.toLowerCase() === currentElementFilter.value.toLowerCase()
+    (figure) =>
+      figure.element.toLowerCase() === currentElementFilter.value.toLowerCase()
   );
 
   console.log(searchedFigures.value);
@@ -134,7 +140,12 @@ onMounted(loadFigures);
     </div>
     <div class="flex justify-center">
       <loader v-if="loading" />
-      <p v-if="!loading && (figures.length == 0 || searchedFigures.length == 0)" class="text-center">no skylanders in your collection</p>
+      <p
+        v-if="!loading && (figures.length == 0 || searchedFigures.length == 0)"
+        class="text-center"
+      >
+        no skylanders in your collection
+      </p>
     </div>
   </div>
 </template>

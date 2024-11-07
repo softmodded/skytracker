@@ -2,9 +2,10 @@
 const { getToken } = useAuth();
 const watching = ref([]);
 const router = useRouter();
-const updates = ref([]);
 const notifications = ref([]);
 const pages = ref([]);
+const loadingWatching = ref(true);
+const loadingNotifications = ref(true);
 const currentPage = ref(1);
 function push(link) {
   router.push(link);
@@ -24,6 +25,8 @@ async function fetchWatching() {
     resultArray[chunkIndex].push(item);
     return resultArray;
   }, []);
+
+  loadingWatching.value = false;
 }
 
 async function fetchNotifications() {
@@ -34,6 +37,8 @@ async function fetchNotifications() {
 
   // slice the notifications array to only show the latest 3
   notifications.value = notifications.value.slice(0, 3);
+
+  loadingNotifications.value = false;
 }
 
 onMounted(fetchNotifications);
@@ -74,9 +79,10 @@ function prevPage() {
           {{ message.message }}
         </p>
       </div>
-      <div v-if="notifications.length === 0" class="my-[4rem]">
+      <div v-if="notifications.length === 0 && !loadingNotifications" class="my-[4rem]">
         <p class="text-sm sm:text-base">all caught up!</p>
       </div>
+      <loader v-if="loadingNotifications" class="w-full my-[2.4rem]" />
       <div class="p-2 border-t-2 border-gray-200">
         <a
           href="#"
@@ -98,14 +104,17 @@ function prevPage() {
           @click="prevPage"
           class="border-none"
           variant="ghost"
+          v-if="!loadingWatching"
         />
 
         <p
-          v-if="pages.length == 0"
+          v-if="pages.length == 0 && !loadingWatching"
           class="text-sm sm:text-base mx-auto my-auto h-[8.7rem] pt-14"
         >
           watching list is empty
         </p>
+
+        <loader v-if="loadingWatching" class="w-full mx-auto my-[2.4rem]" />
 
         <div class="flex flex-wrap justify-center">
           <div
@@ -136,6 +145,7 @@ function prevPage() {
           square
           @click="nextPage"
           class="justify-start"
+          v-if="!loadingWatching"
           variant="ghost"
         />
       </div>

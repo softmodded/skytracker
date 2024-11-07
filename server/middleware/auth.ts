@@ -9,6 +9,7 @@ const authenticatedRoutes = [
     "/api/v1/wishlist/fetch",
     "/api/v1/settings/me/fetch",
     "/api/v1/settings/me/update",
+    
 ]
 
 const includeRoutes = [
@@ -17,6 +18,7 @@ const includeRoutes = [
     "/api/v1/collections/modify",
     "/api/v1/wishlist/modify",
     "/api/v1/settings/modify",
+    "/api/v1/me",
 ]
 
 export default defineEventHandler(async (event) => {

@@ -5,3 +5,7 @@ export function turnStringNice(str: string) {
 export function filterString(str: string) {
     return str.replace(/[^a-zA-Z ]/g, "");
 }
+
+export function turnDateNice(date: string) {
+    return new Date(date).toLocaleDateString();
+}

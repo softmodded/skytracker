@@ -22,6 +22,8 @@ export default eventHandler(async (event) => {
         });
     }
 
-    return { username: result.data[0].username, id: result.data[0].id };
+    const user = result.data[0];
+
+    return { username: user.username, id: user.id, banned: user.banned, firstName: user.firstName, publicMetadata: user.publicMetadata, lastOnline: user.lastActiveAt, createdAt: user.createdAt, image: user.imageUrl, hasImage: user.hasImage };
 });
     

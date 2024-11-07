@@ -2,7 +2,8 @@ export default eventHandler(async (event) => {
     const settings = {
         "website": {
             "options": {
-                "language": "string"
+                "language": "string",
+                "bio": "string",
             },
             "icon": "material-symbols:language"
         },
@@ -13,7 +14,7 @@ export default eventHandler(async (event) => {
                 "watchingVisibility": "boolean"
             },
             "icon": "material-symbols:visibility-lock-outline"
-        }
+        },
     }
 
     return {

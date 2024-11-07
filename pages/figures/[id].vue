@@ -7,6 +7,7 @@ const inCollection = ref(false);
 const onWishlist = ref(false);
 const skylander = ref();
 const id = route.params.id;
+const loading = ref(true);
 const toast = useToast();
 
 const elements = [
@@ -28,12 +29,16 @@ function capitalizeFirstLetter(string) {
 }
 
 const fetchSkylander = async () => {
+  skylander.value = {};
+  skylander.value.price = "Buy";
   const response = await fetch(`/api/v1/skylanders/${id}`);
   if (!response.ok) {
     console.error("Failed to fetch skylander");
     return router.push("/");
   }
   skylander.value = await response.json();
+
+  useHead({ title: "skytracker - " + skylander.value.name });
 
   const watching = await makeAuthenticatedRequest(
     `/api/v1/watching/fetch`,
@@ -73,6 +78,8 @@ const fetchSkylander = async () => {
       console.log(onWishlist.value);
     }
   });
+
+  loading.value = false;
 };
 
 function newTab(url) {
@@ -162,10 +169,12 @@ onMounted(fetchSkylander);
     <div class="flex w-full">
       <div class="w-1/3 pl-32 pt-10">
         <img
+          v-if="!loading"
           class="w-full border-2 border-gray-200 rounded-lg mx-auto"
           :src="skylander?.image"
           alt="Skylander Image"
         />
+        <USkeleton v-if="loading" class="w-full h-[400px]" />
         <div class="w-full">
           <UButton
             class="mt-4"
@@ -178,9 +187,13 @@ onMounted(fetchSkylander);
             class="mt-4"
             block
             color="orange"
-            v-if="skylander?.links?.amazon"
+            v-if="skylander?.links?.amazon && !loading"
             @click="newTab(skylander?.links?.amazon)"
             label="Buy on Amazon"
+          />
+          <USkeleton
+            v-if="loading"
+            class="w-full"
           />
           <UButton
             class="mt-4"
@@ -189,6 +202,10 @@ onMounted(fetchSkylander);
             v-if="skylander?.links?.ebay"
             @click="newTab(skylander?.links?.ebay)"
             label="Buy on eBay"
+          />
+          <USkeleton
+            v-if="loading"
+            class="w-full"
           />
           <FigureMisc class="mt-5" :skylander="skylander" />
         </div>
@@ -202,6 +219,7 @@ onMounted(fetchSkylander);
                   :text="`${capitalizeFirstLetter(
                     getElement(skylander?.element)
                   )} element`"
+                  v-if="!loading"
                 >
                   <NuxtImg
                     :src="
@@ -213,11 +231,14 @@ onMounted(fetchSkylander);
                     alt="Element Image"
                   />
                 </UTooltip>
-                <h1 class="text-4xl font-bold">{{ skylander?.name }}</h1>
+                <USkeleton v-if="loading" class="h-10 w-10 rounded-full pr-1" />
+                <h1 v-if="!loading" class="text-4xl font-bold">{{ skylander?.name }}</h1>
+                <USkeleton v-if="loading" class="h-10 w-64 rounded-full ml-2" />
               </div>
-              <p class="text-lg font-thin">
+              <p v-if="!loading" class="text-lg font-thin">
                 (Series {{ skylander?.series || "1" }})
               </p>
+              <USkeleton v-if="loading" class="h-6 w-24 mt-2" />
             </div>
             <div class="mt-2">
               <UTooltip v-if="!inCollection" text="Add to Collection">

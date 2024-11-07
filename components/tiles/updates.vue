@@ -2,6 +2,7 @@
 const router = useRouter();
 const { getToken } = useAuth();
 const updates = useState("updates");
+const loading = ref(true);
 
 async function fetchUpdates() {
   updates.value = await makeAuthenticatedRequest(
@@ -13,8 +14,10 @@ async function fetchUpdates() {
 
   for (const update of updates.value) {
     update.body = update.body.split("\n");
-    update.body = update.body.slice(0, 4);    
+    update.body = update.body.slice(0, 4);
   }
+
+  loading.value = false;
 }
 
 onMounted(fetchUpdates);
@@ -34,19 +37,24 @@ function newTab(url) {
       class="border-2 border-gray-200 rounded-md w-[310px] h-[410px] text-center"
     >
       <h1 class="mt-4 font-bold text-2xl">updates</h1>
-      <div v-for="(update, index) in updates" :key="index">
-        <h3 class="mt-2 font-semibold text-xl">{{ update.name }}</h3>
-        <ul class="mt-7">
-          <li v-for="(line, index) in update.body" :key="index" class="truncate -my-6">
-            <MDC :value="'­' + line"  tag="changelog" />
-            <br />
-          </li>
-          <a
-            @click="newTab(update.html_url)"
-            class="underline cursor-pointer"
-            >see more →</a
-          >
-        </ul>
+      <loader v-if="loading" />
+      <div v-if="!loading">
+        <div v-for="(update, index) in updates" :key="index">
+          <h3 class="mt-2 font-semibold text-xl">{{ update.name }}</h3>
+          <ul class="mt-7">
+            <li
+              v-for="(line, index) in update.body"
+              :key="index"
+              class="truncate -my-6"
+            >
+              <MDC :value="'­' + line" tag="changelog" />
+              <br />
+            </li>
+            <a @click="newTab(update.html_url)" class="underline cursor-pointer"
+              >see more →</a
+            >
+          </ul>
+        </div>
       </div>
     </div>
   </div>

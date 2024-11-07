@@ -1,4 +1,6 @@
 <script setup>
+useHead({ title: "skytracker - settings" });
+
 const settingsMetadata = ref();
 const tabData = ref([]);
 const { user } = useUser();
@@ -8,8 +10,10 @@ const toast = useToast();
 const userSettings = ref();
 const { getToken } = useAuth();
 const route = useRoute();
+const bio = ref("");
 const privacySettings = ref({});
 const router = useRouter();
+const loading = ref(true);
 const language = ref("English");
 
 const languages = ["English", "Spanish", "French", "German", "Italian"];
@@ -19,6 +23,8 @@ const goto = (path) => router.push(path);
 async function fetchMetadata() {
   const response = await fetch("/api/v1/settings/fetch");
   settingsMetadata.value = await response.json();
+  const me = await makeAuthenticatedRequest(`/api/v1/me/metadata`, await getToken.value());
+  bio.value = me.bio;
   const arr = [];
   console.log(user.value);
   tabData.value.push([
@@ -76,6 +82,7 @@ onMounted(() => {
   page.value = route.query.page || "website";
   setTimeout(() => {
     fetchMetadata();
+    loading.value = false;
   }, 500);
 });
 
@@ -94,12 +101,30 @@ async function updateSetting(key, value) {
     description: res.message,
   });
 }
+
+async function updateBio() {
+  const res = await makeAuthenticatedPostRequest(
+    `/api/v1/me/bio`,
+    await getToken.value(),
+    {
+      bio: bio.value,
+    }
+  );
+
+  toast.add({
+    title: "Message",
+    description: "Bio updated",
+  });
+}
 </script>
 
 <template>
   <div class="flex">
-    <div class="w-64">
+    <div v-if="!loading" class="w-64">
       <UVerticalNavigation :links="tabData" />
+    </div>
+    <div v-if="loading">
+      <USkeleton class="w-64 h-[30rem]" />
     </div>
     <div v-if="page == 'profile'">
       <UserProfile class="h-10" />
@@ -117,6 +142,15 @@ async function updateSetting(key, value) {
           v-model="language"
           :options="languages"
           @change="updateSetting('language', language.toLowerCase())"
+        />
+        <h1 class="text-xl mt-5">bio</h1>
+        <p class="text-sm font-light text-gray-600 mb-2">
+          write a short bio about yourself
+        </p>
+        <UTextarea
+          v-model="bio"
+          @change="updateBio"
+          placeholder="write a short bio about yourself"
         />
       </div>
       <div class="mt-5 ml-10" v-if="page == 'privacy'">

@@ -13,7 +13,7 @@ function push(link) {
 
 const isDark = computed({
   get() {
-    return colorMode.value === "dark";
+    return false
   },
   set() {
     colorMode.preference = colorMode.value === "dark" ? "light" : "dark";

@@ -34,7 +34,7 @@ function push(url) {
         class="h-[200px] sm:h-[250px] md:h-[300px] mx-auto object-contain"
         :alt="dailySkylander.name"
       />
-      <p class="mt-2 sm:mt-3 mb-1 sm:mb-2 text-lg sm:text-xl font-bold">{{ dailySkylander.name }}</p>
+      <p class="truncate mt-2 sm:mt-3 mb-1 sm:mb-2 text-lg sm:text-xl font-bold">{{ dailySkylander.name }}</p>
     </div>
     <div v-else class="p-4">
       <p class="my-2 sm:my-3 font-thin text-sm sm:text-md">skylander of the day</p>
