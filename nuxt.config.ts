@@ -17,8 +17,6 @@ export default defineNuxtConfig({
   },
 
   umami: {
-    id: 'a993650f-c46f-4079-aed3-4086318dc8de',
-    host: 'https://analytics.softmodded.com',
     autoTrack: true,
     proxy: 'cloak',
     ignoreLocalhost: false,
