@@ -11,7 +11,8 @@ export default eventHandler(async (event) => {
             "options": {
                 "collectionVisibility": "boolean",
                 "wishlistVisibility": "boolean",
-                "watchingVisibility": "boolean"
+                "watchingVisibility": "boolean",
+                "trackers": "boolean",
             },
             "icon": "material-symbols:visibility-lock-outline"
         },

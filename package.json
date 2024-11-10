@@ -26,9 +26,10 @@
     "node-fetch": "^2.6.7",
     "nuxt": "^3.13.0",
     "nuxt-typed-router": "^3.7.0",
+    "nuxt-umami": "^3.0.2",
     "vue": "latest",
     "vue-chartjs": "^5.3.1",
-    "vue-clerk": "^0.6.15",
+    "vue-clerk": "^0.8.1",
     "vue-router": "latest"
   },
   "devDependencies": {

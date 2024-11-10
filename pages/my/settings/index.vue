@@ -70,6 +70,7 @@ async function fetchMetadata() {
   privacySettings.value.collection = userSettingRes.collectionVisibility;
   privacySettings.value.wishlist = userSettingRes.wishlistVisibility;
   privacySettings.value.watching = userSettingRes.watchingVisibility;
+  privacySettings.value.trackers = userSettingRes.trackers;
   language.value = turnStringNice(userSettingRes.language);
   console.log(userSettingRes);
 }
@@ -210,6 +211,26 @@ async function updateBio() {
             public
           </p>
           <p class="text-sm font-light text-gray-600 ml-2" v-else>private</p>
+        </div>
+        
+        <h1 class="text-xl">trackers</h1>
+        <p class="text-sm font-light text-gray-600 mb-2">
+          change the analytics & trackers used
+        </p>
+        <div class="flex">
+          <UToggle
+            v-model="privacySettings.trackers"
+            @change="
+              updateSetting('trackers', privacySettings.trackers)
+            "
+          />
+          <p
+            class="text-sm font-light text-gray-600 ml-2"
+            v-if="privacySettings?.trackers == true"
+          >
+            trackers enabled
+          </p>
+          <p class="text-sm font-light text-gray-600 ml-2" v-else>trackers disabled</p>
         </div>
       </div>
     </div>

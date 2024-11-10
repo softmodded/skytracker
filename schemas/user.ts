@@ -44,7 +44,8 @@ const userSchema = new mongoose.Schema({
             collectionVisibility: true,
             wishlistVisibility: true,
             watchingVisibility: true,
-            language: "english"
+            language: "english",
+            trackers: true
         }
     }
 }, { versionKey: false, id: false });
