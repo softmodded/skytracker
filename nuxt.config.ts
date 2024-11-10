@@ -23,12 +23,4 @@ export default defineNuxtConfig({
     excludeQueryParams: false,
     logErrors: true,
   },
-
-  vite: {
-    build: {
-      rollupOptions: {
-        external: ["vue-clerk", "@clerk/backend"],
-      }
-    },
-  }
 });
