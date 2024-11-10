@@ -18,7 +18,7 @@ const includeRoutes = [
     "/api/v1/collections/modify",
     "/api/v1/wishlist/modify",
     "/api/v1/settings/modify",
-    "/api/v1/me",
+    "/api/v1/me/",
 ]
 
 export default defineEventHandler(async (event) => {
