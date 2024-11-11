@@ -7,7 +7,7 @@ function push(link) {
 </script>
 
 <template>
-  <div class="flex flex-wrap justify-center gap-4">
+  <div class="flex flex-wrap justify-center gap-4 mx-auto w-[80rem]">
     <div
       v-for="(item, index) in [
         { icon: 'material-symbols:collections-bookmark', text: 'jump to collection', link: '/my/collection' },
