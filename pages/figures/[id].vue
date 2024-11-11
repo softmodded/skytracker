@@ -224,7 +224,7 @@ onMounted(fetchSkylander);
                   <NuxtImg
                     :src="
                       '/assets/elements/' +
-                      getElement(skylander?.element) +
+                      getElement(skylander?.element).toLowerCase() +
                       '.png'
                     "
                     class="h-10 mt-[3px] pr-1"

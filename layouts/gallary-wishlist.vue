@@ -4,11 +4,16 @@ const router = useRouter();
 const currentGameFilter = useState("currentGameFilter");
 const currentCategoryFilter = useState("currentCategoryFilter");
 const currentElementFilter = useState("currentElementFilter");
+const collectionText = ref("your");
 loading.value = true;
 
 // when the initial page is loaded
 onMounted(() => {
   loading.value = false;
+
+  if (route.params.username) {
+    collectionText.value = `${route.params.username}'s`;
+  }
 });
 
 const push = (path) => router.push(path);
@@ -190,7 +195,7 @@ function clearFilters() {
     <div v-if="!loading">
       <navbar class="mb-16 z-50" />
       <h1 class="text-center mx-auto font-semibold mt-32 text-4xl mb-10">
-        {{ route.params.username + "'s" || "your" }} wishlist
+        {{ collectionText }} wishlist
       </h1>
       <div v-auto-animate class="flex mt-2 align-middle justify-center">
         <UButton
