@@ -2,6 +2,7 @@
 const route = useRoute();
 const toast = useToast();
 const colorMode = useColorMode();
+const loading = useState("global_loading");
 
 const routeWatcher = watch(
   () => route.path,
@@ -44,6 +45,7 @@ colorMode.preference = "light";
             @click="isDark = !isDark"
           />
         </!--div-->
+        <pagefooter v-if="!loading" />
     </NuxtLayout>
     <UNotifications />
   </div>

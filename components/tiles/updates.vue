@@ -5,19 +5,21 @@ const updates = useState("updates");
 const loading = ref(true);
 
 async function fetchUpdates() {
-  updates.value = await makeAuthenticatedRequest(
-    `/api/v1/metadata/updates`,
-    await getToken.value()
-  );
+  setTimeout(async () => {
+    updates.value = await makeAuthenticatedRequest(
+      `/api/v1/metadata/updates`,
+      await getToken.value()
+    );
 
-  updates.value = updates.value.slice(0, 2);
+    updates.value = updates.value.slice(0, 2);
 
-  for (const update of updates.value) {
-    update.body = update.body.split("\n");
-    update.body = update.body.slice(0, 4);
-  }
+    for (const update of updates.value) {
+      update.body = update.body.split("\n");
+      update.body = update.body.slice(0, 4);
+    }
 
-  loading.value = false;
+    loading.value = false;
+  }, 300);
 }
 
 onMounted(fetchUpdates);
