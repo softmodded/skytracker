@@ -28,7 +28,7 @@ function push(url) {
     @click="push(`/figures/${skid}`)"
   >
     <div v-if="dailySkylander" class="p-4">
-      <p class="my-2 sm:my-3 font-thin text-sm sm:text-md">skylander of the day</p>
+      <p class="my-2 sm:my-3 font-thin text-sm sm:text-md">figure of the day</p>
       <img
         :src="dailySkylander.image"
         class="h-[200px] sm:h-[250px] md:h-[300px] mx-auto object-contain"
@@ -37,7 +37,7 @@ function push(url) {
       <p class="truncate mt-2 sm:mt-3 mb-1 sm:mb-2 text-lg sm:text-xl font-bold">{{ dailySkylander.name }}</p>
     </div>
     <div v-else class="p-4">
-      <p class="my-2 sm:my-3 font-thin text-sm sm:text-md">skylander of the day</p>
+      <p class="my-2 sm:my-3 font-thin text-sm sm:text-md">figure of the day</p>
       <USkeleton
         class="h-[200px] sm:h-[250px] md:h-[300px] mx-auto w-full sm:w-[240px] md:w-[270px]"
         :ui="{ rounded: 'rounded-none' }"

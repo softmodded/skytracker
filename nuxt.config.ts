@@ -29,6 +29,10 @@ export default defineNuxtConfig({
       "/api/v1/metadata/buildinfo": {
         prerender: true
       }
+    },
+
+    experimental: {
+      openAPI: true
     }
   }
 });
