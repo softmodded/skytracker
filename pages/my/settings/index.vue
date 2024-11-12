@@ -14,6 +14,8 @@ const bio = ref("");
 const privacySettings = ref({});
 const router = useRouter();
 const loading = ref(true);
+const currentBuild = ref("loading")
+const latestBuild = ref("loading")
 const language = ref("English");
 
 const languages = ["English", "Spanish", "French", "German", "Italian"];
@@ -73,6 +75,14 @@ async function fetchMetadata() {
   privacySettings.value.trackers = userSettingRes.trackers;
   language.value = turnStringNice(userSettingRes.language);
   console.log(userSettingRes);
+
+  const current = await fetch("/api/v1/metadata/buildinfo");
+  const currentRes = await current.text();
+  currentBuild.value = currentRes.slice(0,7)
+
+  const latestRes = await fetch("/api/v1/metadata/latest");
+  const latestBuildRes = await latestRes.text();
+  latestBuild.value = latestBuildRes.slice(0,7)
 }
 
 watch(page, (newPage) => {
@@ -234,7 +244,8 @@ async function updateBio() {
         </div>
       </div>
       <div v-if="page == 'about'">
-        <p class="text-sm mt-3 ml-4 text-gray-500 ">you are on build 38d9e, while the latest build is 39dn0d</p>
+        <p v-if="!currentBuild == latestBuild" class="text-sm mt-3 ml-4 text-gray-500 ">you are on build {{ currentBuild }}, while the latest build is {{ latestBuild }}</p>
+        <p v-else class="text-sm mt-3 ml-4 text-gray-500 ">you are on the latest build ({{ latestBuild }})</p>
         <p class="text-xs mt-1 ml-4 text-gray-500">made with love</p>
       </div>
     </div>
