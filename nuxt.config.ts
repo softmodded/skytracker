@@ -23,4 +23,12 @@ export default defineNuxtConfig({
     excludeQueryParams: false,
     logErrors: true,
   },
+
+  nitro: {
+    routeRules: {
+      "/api/v1/metadata/buildinfo": {
+        prerender: true
+      }
+    }
+  }
 });

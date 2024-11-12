@@ -132,7 +132,7 @@ async function updateBio() {
     </div>
     <div>
       <h1 v-if="page != 'profile'" class="text-xl mx-auto">
-        {{ page }} settings
+        {{ page }}
       </h1>
       <div class="mt-5 ml-10" v-if="page == 'website'">
         <h1 class="text-xl">language</h1>
@@ -230,8 +230,12 @@ async function updateBio() {
           >
             trackers enabled
           </p>
-          <p class="text-sm font-light text-gray-600 ml-2" v-else>trackers disabled</p>
+          <p class="text-sm font-light text-gray-600 ml-2" v-else>minimal trackers</p>
         </div>
+      </div>
+      <div v-if="page == 'about'">
+        <p class="text-sm mt-3 ml-4 text-gray-500 ">you are on build 38d9e, while the latest build is 39dn0d</p>
+        <p class="text-xs mt-1 ml-4 text-gray-500">made with love</p>
       </div>
     </div>
   </div>

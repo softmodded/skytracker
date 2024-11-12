@@ -45,7 +45,7 @@ colorMode.preference = "light";
             @click="isDark = !isDark"
           />
         </!--div-->
-        <pagefooter v-if="!loading" />
+        <!--pagefooter v-if="!loading" / -->
     </NuxtLayout>
     <UNotifications />
   </div>

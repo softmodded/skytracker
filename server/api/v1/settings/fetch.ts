@@ -1,4 +1,4 @@
-export default eventHandler(async (event) => {
+export default defineCachedEventHandler(async (event) => {
     const settings = {
         "website": {
             "options": {
@@ -16,6 +16,9 @@ export default eventHandler(async (event) => {
             },
             "icon": "material-symbols:visibility-lock-outline"
         },
+        "about": {
+            icon: "material-symbols:info-outline",
+        }
     }
 
     return {

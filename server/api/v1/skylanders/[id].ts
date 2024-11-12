@@ -1,7 +1,7 @@
 import { fetchPartialSkylander } from "~/utils/database";
 import { getSkylanderData } from "~/utils/scraper";
 
-export default defineEventHandler(async (event) => {
+export default defineCachedEventHandler(async (event) => {
     const id = getRouterParam(event, "id");
     if (!id) {
         throw createError({
