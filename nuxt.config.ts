@@ -13,7 +13,7 @@ export default defineNuxtConfig({
   ],
   colorMode: {
     fallback: "light",
-    preference: "light"
+    preference: "light",
   },
 
   umami: {
