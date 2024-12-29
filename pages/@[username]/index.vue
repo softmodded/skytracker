@@ -119,7 +119,7 @@ onMounted(async () => {
         <USkeleton v-if="loading" class="w-[50rem] h-[10rem] mx-auto mt-5" />
         <div v-if="!loading" class="border-2 rounded-md border-gray-200 p-5 w-[40rem] h-[14rem] mt-6 text-center text-gray-500" >
           <p class="h-7 truncate">
-            {{ user.publicMetadata?.bio }}
+            {{ user.publicMetadata?.bio || "No bio set" }}
           </p>
           <div class="h-[0.1rem] w-full bg-gray-200 mt-3 mb-4"></div>
           <p>joined on {{ turnDateNice(user.createdAt) }} • last online on {{ turnDateNice(user.lastOnline) }}</p>
